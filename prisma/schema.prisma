@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,16 +16,21 @@ model User {
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  posts     Post[]
+  customers Customers[]
 }
 
-model Post {
+model Customers {
   id        String   @id @default(cuid())
-  title     String
+  customerCode Int
+  name      String
+  city      String
+  postalCode Int
+  province  String
+  address   String
   content   String?
-  published Boolean  @default(false)
+  isCustomer Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  createdBy String @map("uploaded_by")
+  user       User     @relation(fields: [createdBy], references: [id])
 }
